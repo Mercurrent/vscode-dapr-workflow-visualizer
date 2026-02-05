@@ -1,0 +1,149 @@
+{
+  "name": "dapr-workflow-visualizer",
+  "displayName": "Dapr Workflow Visualizer",
+  "description": "Visualize Dapr workflows as interactive graphs",
+  "version": "0.0.1",
+  "publisher": "dapr-community",
+  "icon": "media/icon.svg",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dapr/dapr-workflow-visualizer"
+  },
+  "engines": {
+    "vscode": "^1.108.1"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "dapr",
+    "workflow",
+    "visualization",
+    "graph",
+    "orchestration"
+  ],
+  "activationEvents": [
+    "onLanguage:csharp",
+    "onLanguage:python",
+    "onLanguage:javascript",
+    "onLanguage:typescript"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "dapr-workflow-visualizer.visualize",
+        "title": "Visualize Dapr Workflow",
+        "category": "Dapr",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "dapr-workflow-visualizer.visualizeFile",
+        "title": "Visualize Workflow from File",
+        "category": "Dapr"
+      },
+      {
+        "command": "dapr-workflow-visualizer.refresh",
+        "title": "Refresh Workflow Visualization",
+        "category": "Dapr",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "dapr-workflow-visualizer.navigateToNode",
+        "title": "Navigate to Node in Visualization",
+        "category": "Dapr",
+        "icon": "$(target)"
+      },
+      {
+        "command": "dapr-workflow-visualizer.visualizeAndFocus",
+        "title": "Visualize and Focus on Activity",
+        "category": "Dapr",
+        "icon": "$(target)"
+      },
+      {
+        "command": "dapr-workflow-visualizer.visualizeWorkflow",
+        "title": "Visualize Specific Workflow",
+        "category": "Dapr",
+        "icon": "$(graph)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "dapr-workflow-visualizer.navigateToNode",
+        "key": "ctrl+shift+g",
+        "mac": "cmd+shift+g",
+        "when": "editorTextFocus && resourceLangId =~ /csharp|python|javascript|typescript/"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "dapr-workflow-visualizer.visualize",
+          "when": "resourceLangId == csharp || resourceLangId == python || resourceLangId == javascript || resourceLangId == typescript",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "dapr-workflow-visualizer.visualize",
+          "when": "resourceLangId == csharp || resourceLangId == python || resourceLangId == javascript || resourceLangId == typescript",
+          "group": "dapr"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "dapr-workflow-visualizer.visualizeFile",
+          "when": "resourceLangId == csharp || resourceLangId == python || resourceLangId == javascript || resourceLangId == typescript",
+          "group": "dapr"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Dapr Workflow Visualizer",
+      "properties": {
+        "daprWorkflowVisualizer.defaultLayout": {
+          "type": "string",
+          "default": "dagre",
+          "enum": ["dagre", "force", "hierarchical"],
+          "description": "Default graph layout algorithm"
+        },
+        "daprWorkflowVisualizer.theme": {
+          "type": "string",
+          "default": "auto",
+          "enum": ["auto", "light", "dark"],
+          "description": "Visualization theme"
+        },
+        "daprWorkflowVisualizer.showActivityDetails": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show activity details on hover"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.108.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "typescript-eslint": "^8.52.0",
+    "eslint": "^9.39.2",
+    "typescript": "^5.9.3",
+    "ts-loader": "^9.5.4",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
