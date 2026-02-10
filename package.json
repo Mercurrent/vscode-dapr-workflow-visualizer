@@ -105,13 +105,21 @@
         "daprWorkflowVisualizer.defaultLayout": {
           "type": "string",
           "default": "dagre",
-          "enum": ["dagre", "force", "hierarchical"],
+          "enum": [
+            "dagre",
+            "force",
+            "hierarchical"
+          ],
           "description": "Default graph layout algorithm"
         },
         "daprWorkflowVisualizer.theme": {
           "type": "string",
           "default": "auto",
-          "enum": ["auto", "light", "dark"],
+          "enum": [
+            "auto",
+            "light",
+            "dark"
+          ],
           "description": "Visualization theme"
         },
         "daprWorkflowVisualizer.showActivityDetails": {
