@@ -51,7 +51,8 @@ export class PythonWorkflowParser extends BaseWorkflowParser {
         const workflows: Array<{name: string, startLine: number, endLine: number, startIndex: number, endIndex: number}> = [];
         
         // Find all @workflow decorated functions
-        const workflowPattern = /@(?:dapr_)?workflow[^\n]*\n\s*(?:async\s+)?def\s+(\w+)/g;
+        // Matches: @workflow, @dapr_workflow, @wfr.workflow, @runtime.workflow, etc.
+        const workflowPattern = /@(?:\w+\.)?(?:dapr_)?workflow[^\n]*\n\s*(?:async\s+)?def\s+(\w+)/g;
         const lines = sourceCode.split('\n');
         
         let match;
@@ -78,7 +79,7 @@ export class PythonWorkflowParser extends BaseWorkflowParser {
                 endLine = next.line - 1;
             } else {
                 // End at the last line of file or before @activity decorators
-                const activityMatch = sourceCode.slice(current.startIndex).match(/\n@activity\b/);
+                const activityMatch = sourceCode.slice(current.startIndex).match(/\n@(?:\w+\.)?activity\b/);
                 if (activityMatch) {
                     endIndex = current.startIndex + activityMatch.index!;
                     endLine = this.getLineNumber(sourceCode, endIndex) - 1;
@@ -201,7 +202,7 @@ export class PythonWorkflowParser extends BaseWorkflowParser {
      */
     private extractWorkflowInputInfo(sourceCode: string): void {
         // Find workflow function signature to get input parameter name
-        const funcMatch = sourceCode.match(/@(?:dapr_)?workflow[^\n]*\n\s*(?:async\s+)?def\s+\w+\s*\([^,]+,\s*(\w+)\s*:/);
+        const funcMatch = sourceCode.match(/@(?:\w+\.)?(?:dapr_)?workflow[^\n]*\n\s*(?:async\s+)?def\s+\w+\s*\([^,]+,\s*(\w+)\s*:/);
         if (funcMatch) {
             this.workflowInputParam = funcMatch[1];
         }
@@ -366,7 +367,7 @@ export class PythonWorkflowParser extends BaseWorkflowParser {
 
     private extractWorkflowName(sourceCode: string, filePath: string): string {
         // Look for @workflow decorator followed by function definition
-        const decoratorMatch = sourceCode.match(/@(?:dapr_)?workflow(?:\([^)]*\))?\s*\n\s*(?:async\s+)?def\s+(\w+)/);
+        const decoratorMatch = sourceCode.match(/@(?:\w+\.)?(?:dapr_)?workflow(?:\([^)]*\))?\s*\n\s*(?:async\s+)?def\s+(\w+)/);
         if (decoratorMatch) {
             return decoratorMatch[1];
         }
@@ -388,7 +389,7 @@ export class PythonWorkflowParser extends BaseWorkflowParser {
         };
 
         // Extract docstring
-        const docstringMatch = sourceCode.match(/(?:@(?:dapr_)?workflow[^\n]*\n\s*(?:async\s+)?def\s+\w+[^:]+:\s*\n\s*)("""[\s\S]*?"""|'''[\s\S]*?''')/);
+        const docstringMatch = sourceCode.match(/(?:@(?:\w+\.)?(?:dapr_)?workflow[^\n]*\n\s*(?:async\s+)?def\s+\w+[^:]+:\s*\n\s*)("""[\s\S]*?"""|'''[\s\S]*?''')/);
         if (docstringMatch) {
             metadata.description = docstringMatch[1].replace(/"""|'''/g, '').trim();
         }

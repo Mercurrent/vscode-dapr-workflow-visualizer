@@ -2,12 +2,12 @@
   "name": "dapr-workflow-visualizer",
   "displayName": "Dapr Workflow Visualizer",
   "description": "Visualize Dapr workflows as interactive graphs",
-  "version": "0.0.1",
-  "publisher": "dapr-community",
-  "icon": "media/icon.svg",
+  "version": "0.0.2",
+  "publisher": "TCramer",
+  "icon": "media/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dapr/dapr-workflow-visualizer"
+    "url": "https://github.com/Mercurrent/vscode-dapr-workflow-visualizer"
   },
   "engines": {
     "vscode": "^1.108.1"

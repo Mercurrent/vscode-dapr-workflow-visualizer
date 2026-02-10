@@ -248,7 +248,7 @@ function isWorkflowFile(document: vscode.TextDocument): boolean {
         /callActivity/i,
         /Workflow/i,
         /orchestrat/i,
-        /@workflow/i,
+        /@(?:\w+\.)?workflow/i,
         /DaprWorkflow/i
     ];
 
@@ -272,7 +272,8 @@ class WorkflowCodeLensProvider implements vscode.CodeLensProvider {
             // C# workflow class
             { pattern: /class\s+(\w+)\s*:\s*Workflow/g, nameGroup: 1 },
             // Python workflow decorator - capture function name on next line
-            { pattern: /@(?:dapr_)?workflow[^\n]*\n\s*(?:async\s+)?def\s+(\w+)/g, nameGroup: 1 },
+            // Matches: @workflow, @dapr_workflow, @wfr.workflow, @runtime.workflow, etc.
+            { pattern: /@(?:\w+\.)?(?:dapr_)?workflow[^\n]*\n\s*(?:async\s+)?def\s+(\w+)/g, nameGroup: 1 },
             // JS/TS workflow function
             { pattern: /(?:export\s+)?(?:async\s+)?function\s*\*?\s*(\w*[Ww]orkflow\w*)/g, nameGroup: 1 },
             { pattern: /registerWorkflow\s*\(\s*["']?(\w+)["']?/g, nameGroup: 1 }
@@ -412,7 +413,7 @@ class WorkflowCodeLensProvider implements vscode.CodeLensProvider {
         const workflows: Array<{name: string, startIndex: number, endIndex: number}> = [];
         
         // Python workflow pattern
-        const pythonPattern = /@(?:dapr_)?workflow[^\n]*\n\s*(?:async\s+)?def\s+(\w+)/g;
+        const pythonPattern = /@(?:\w+\.)?(?:dapr_)?workflow[^\n]*\n\s*(?:async\s+)?def\s+(\w+)/g;
         // C# workflow pattern
         const csharpPattern = /class\s+(\w+)\s*:\s*Workflow/g;
         // JS/TS workflow pattern  
@@ -445,7 +446,7 @@ class WorkflowCodeLensProvider implements vscode.CodeLensProvider {
                 endIndex = next.startIndex;
             } else {
                 // Check for @activity decorator as boundary
-                const activityMatch = text.slice(current.startIndex).match(/\n@activity\b/);
+                const activityMatch = text.slice(current.startIndex).match(/\n@(?:\w+\.)?activity\b/);
                 if (activityMatch && activityMatch.index) {
                     endIndex = current.startIndex + activityMatch.index;
                 } else {

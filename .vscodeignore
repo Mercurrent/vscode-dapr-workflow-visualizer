@@ -14,3 +14,5 @@ vsc-extension-quickstart.md
 **/.vscode-test.*
 .github/**
 docs/ARCHITECTURE_AND_LEARNINGS.md
+**/.mypy_cache/**
+**/__pycache__/**
